@@ -30,8 +30,9 @@ const Holdings = () => {
   const [chartType, setChartType] = useState("bar");
 
   useEffect(() => {
+    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3002";
     axios
-      .get("http://localhost:3002/allHoldings")
+      .get(`${API_URL}/allHoldings`)
       .then((res) => {
         setAllHoldings(res.data);
         setLoading(false);

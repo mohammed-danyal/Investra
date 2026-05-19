@@ -6,8 +6,9 @@ const Positions = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3002";
     axios
-      .get("http://localhost:3002/allPositions")
+      .get(`${API_URL}/allPositions`)
       .then((res) => {
         setAllPositions(res.data);
         setLoading(false);

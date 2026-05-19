@@ -18,7 +18,8 @@ function Login() {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.post("http://localhost:3002/login", form);
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3002";
+      const res = await axios.post(`${API_URL}/login`, form);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("username", res.data.name);
       navigate("/");

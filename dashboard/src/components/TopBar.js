@@ -12,7 +12,8 @@ const TopBar = () => {
     // Fetch NIFTY 50 and SENSEX from backend proxy
     const fetchIndex = async (symbol, key) => {
       try {
-        const res = await axios.get(`http://localhost:3002/stock/${symbol}`);
+        const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3002";
+        const res = await axios.get(`${API_URL}/stock/${symbol}`);
         if (res.data.price) {
           const up = res.data.change >= 0;
           setIndices((prev) => ({
