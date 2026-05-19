@@ -8,8 +8,9 @@ const Orders = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchOrders = () => {
+    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3002";
     axios
-      .get("http://localhost:3002/allOrders")
+      .get(`${API_URL}/allOrders`)
       .then((res) => {
         setAllOrders(res.data);
         setLoading(false);
@@ -31,7 +32,8 @@ const Orders = () => {
       return;
     }
     try {
-      await axios.delete(`http://localhost:3002/order/${id}`, {
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3002";
+      await axios.delete(`${API_URL}/order/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setAllOrders((prev) => prev.filter((o) => o._id !== id));
