@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:3002",
+  baseURL: process.env.REACT_APP_API_URL || "https://investra-83dg.onrender.com",
 });
 
 api.interceptors.request.use((config) => {
