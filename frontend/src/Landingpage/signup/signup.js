@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios";
+import AuthContext from "../../context/AuthContext";
 
 function Signup() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [submitted, setSubmitted] = useState(false);
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,12 +20,11 @@ function Signup() {
     setLoading(true);
     setError("");
     try {
-      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3002";
-      const res = await axios.post(`${API_URL}/signup`, form);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("username", res.data.name);
-      setSubmitted(true);
-      setTimeout(() => navigate("/"), 2000);
+      const res = await api.post(`/auth/signup`, form);
+      if (res.data.success) {
+        login(res.data.data.token, { name: res.data.data.name });
+        navigate("/dashboard");
+      }
     } catch (err) {
       setError(err.response?.data?.error || "Signup failed. Please try again.");
     } finally {
@@ -41,11 +41,6 @@ function Signup() {
           </div>
           <div className="col-md-5 offset-md-1">
             <h2 className="mb-4">Open a free account</h2>
-            {submitted ? (
-              <div className="alert alert-success">
-                🎉 Account created! Welcome to Investra. Redirecting...
-              </div>
-            ) : (
               <form onSubmit={handleSubmit}>
                 {error && (
                   <div className="alert alert-danger">{error}</div>
@@ -107,7 +102,6 @@ function Signup() {
                   {loading ? "Creating Account..." : "Create Account"}
                 </button>
               </form>
-            )}
           </div>
         </div>
       </div>

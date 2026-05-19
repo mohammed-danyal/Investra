@@ -1,16 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
 function Navbar() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const username = localStorage.getItem("username");
+  const { user, logout } = useContext(AuthContext);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
+    logout();
     navigate("/");
-    window.location.reload();
   };
 
   return (
@@ -54,20 +52,18 @@ function Navbar() {
               <Link className="nav-link" to="/support">Support</Link>
             </li>
 
-            {token ? (
+            {user ? (
               <>
                 <li className="nav-item mx-2 d-flex align-items-center">
-                  <span className="nav-link text-muted">👤 {username}</span>
+                  <span className="nav-link text-muted">👤 {user.name}</span>
                 </li>
                 <li className="nav-item mx-2">
-                  <a
-                    href="http://localhost:3001"
+                  <Link
+                    to="/dashboard"
                     className="btn btn-outline-primary btn-sm me-2"
-                    target="_blank"
-                    rel="noreferrer"
                   >
                     Dashboard
-                  </a>
+                  </Link>
                 </li>
                 <li className="nav-item mx-2">
                   <button

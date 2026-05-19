@@ -1,20 +1,16 @@
 require("dotenv").config();
-const mongoose = require("mongoose");
+const validateEnv = require("./config/env");
+const connectDB = require("./config/db");
 const app = require("./app");
 
+// Validate Environment Variables
+validateEnv();
+
+// Connect to Database
+connectDB();
+
 const PORT = process.env.PORT || 3002;
-const uri = process.env.MONGO_URL;
 
-if (uri) {
-  mongoose.connect(uri)
-    .then(() => console.log("DB connected successfully!"))
-    .catch((err) => console.error("DB connection error:", err.message));
-}
-
-if (process.env.NODE_ENV !== "production") {
-  app.listen(PORT, () => {
-    console.log("App started on port " + PORT);
-  });
-}
-
-module.exports = app;
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
+});

@@ -1,6 +1,11 @@
 const { Schema } = require("mongoose");
 
 const HoldingsSchema = new Schema({
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   name: String,
   qty: Number,
   avg: Number,
@@ -8,5 +13,8 @@ const HoldingsSchema = new Schema({
   net: String,
   day: String,
 });
+
+HoldingsSchema.index({ user: 1 });
+HoldingsSchema.index({ name: 1 });
 
 module.exports = { HoldingsSchema };

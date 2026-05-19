@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios";
+import AuthContext from "../../context/AuthContext";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,12 +20,11 @@ function Login() {
     setLoading(true);
     setError("");
     try {
-      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3002";
-      const res = await axios.post(`${API_URL}/login`, form);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("username", res.data.name);
-      navigate("/");
-      window.location.reload();
+      const res = await api.post(`/auth/login`, form);
+      if (res.data.success) {
+        login(res.data.data.token, { name: res.data.data.name });
+        navigate("/dashboard");
+      }
     } catch (err) {
       setError(err.response?.data?.error || "Login failed. Please try again.");
     } finally {
